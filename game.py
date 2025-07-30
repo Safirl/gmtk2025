@@ -1,18 +1,25 @@
 import os
 import pygame
 from pygame import Vector2
+from screeninfo import get_monitors
 
 os.environ['SDL_VIDEO_CENTERED'] = '1'
 
 class UserInterface():
     def __init__(self):
-        self.worldSize = Vector2(1920, 1080)
+        for monitor in get_monitors():
+            if monitor.is_primary:
+                mainMonitor = monitor
+        if (not mainMonitor):
+            pygame.quit()    
+                
+        self.worldSize = Vector2(mainMonitor.width, mainMonitor.height)
 
-        windowSize = self.worldSize.elementwise()
-        self.window = pygame.display.set_mode(Vector2(1920,1080))
+        self.window = pygame.display.set_mode(self.worldSize)
         pygame.display.set_caption("My game")
         
     def render(self):
+        self.window.fill((0,0,0))
         #render sprites on screen
         pygame.draw.rect(self.window,(0,0,255),(120,120,400,240))
         pygame.display.update()
