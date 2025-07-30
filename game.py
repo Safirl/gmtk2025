@@ -2,7 +2,7 @@ import os
 import pygame
 from pygame import Vector2
 
-from level import LoadLevelCommand
+from level_loader import LoadLevelCommand, levelLoader
 from screeninfo import get_monitors
 
 os.environ['SDL_VIDEO_CENTERED'] = '1'
@@ -49,6 +49,8 @@ class Game():
         pass
     
     def update(self):
+        if levelLoader.currentLevel:
+            levelLoader.currentLevel.update()
         for command in self.commands:
             command.run()
         self.commands.clear()
