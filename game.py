@@ -6,11 +6,10 @@ os.environ['SDL_VIDEO_CENTERED'] = '1'
 
 class UserInterface():
     def __init__(self):
-        self.cellSize = Vector2(64,64)
-        self.worldSize = Vector2(16, 10)
+        self.worldSize = Vector2(1920, 1080)
 
-        windowSize = self.worldSize.elementwise() * self.cellSize
-        self.window = pygame.display.set_mode((int(windowSize.x),int(windowSize.y)))
+        windowSize = self.worldSize.elementwise()
+        self.window = pygame.display.set_mode(Vector2(1920,1080))
         pygame.display.set_caption("My game")
         
     def render(self):
@@ -24,12 +23,13 @@ class Game():
     def __init__(self):
         pygame.init()
         self.ui = UserInterface()
-        
         self.clock = pygame.time.Clock()
         self.running = True
     
     def processInput(self):
-        #handle inputs
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                self.running = False
         pass
     
     def update(self):
