@@ -1,4 +1,4 @@
-class foot():
+class Foot():
     def __init__(self):
         self.legs : str = ""
         self.foot : str = ""
