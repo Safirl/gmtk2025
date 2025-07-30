@@ -1,3 +1,4 @@
+from command import Command
 class LevelLoader():
     def __init__(self):
         self.levels = {
@@ -80,3 +81,15 @@ class ShoesLevel(Level):
 
     def unloadLevel(self):
         super().unloadLevel()
+
+
+
+class LoadLevelCommand(Command):
+    def __init__(self,levelName:str):
+        self.levelName = levelName
+
+    def run(self):
+        levelLoader.changeLevel(self.levelName)
+        pass
+
+levelLoader = LevelLoader()
