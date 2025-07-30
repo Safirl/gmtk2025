@@ -1,21 +1,14 @@
-class Level():
-    def __init__(self, name: str):
+class Level:
+    def __init__(self, name):
         self.name = name
-        pass
-    
+
     def loadLevel(self):
-        print(f'Loading level: {self.name}')
-        pass
-    
+        print(f"Base load for {self.name}")
+
     def unloadLevel(self):
-        print(f'Unloading level: {self.name}')
-        pass
+        print(f"Base unload for {self.name}")
 
     def update(self):
-        raise NotImplementedError
+        pass
     
-
-
-
-
 
