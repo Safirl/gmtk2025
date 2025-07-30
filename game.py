@@ -1,6 +1,8 @@
 import os
 import pygame
 from pygame import Vector2
+
+from level import LevelLoader
 from screeninfo import get_monitors
 
 os.environ['SDL_VIDEO_CENTERED'] = '1'
@@ -29,9 +31,17 @@ class UserInterface():
 class Game():
     def __init__(self):
         pygame.init()
+        self.levelLoader = LevelLoader()
         self.ui = UserInterface()
+        self.commands = []
         self.clock = pygame.time.Clock()
         self.running = True
+
+
+        loadLevelCommand = LoadLevelCommand(self,"mainScreen")
+        self.queueCommand(loadLevelCommand)
+
+        
     
     def processInput(self):
         for event in pygame.event.get():
@@ -40,9 +50,15 @@ class Game():
         pass
     
     def update(self):
+        for command in self.commands:
+            command.run()
+        self.commands.clear()
         #handle logic directly related to the game (score, load level, )
         pass
     
+    def queueCommand(self, command ):
+        self.commands.append(command)
+
     def run(self):
         while self.running:
             self.processInput()
@@ -50,6 +66,29 @@ class Game():
             self.ui.render()        
             self.clock.tick(60)
         
+class Command():
+    def  __init__(self, game : Game):
+        if not game :
+            print('Game is not valid')
+            return
+        self.game = game
+    
+    def run(self):
+        raise NotImplementedError()
+
+class LoadLevelCommand(Command):
+    def __init__(self, game,levelName:str):
+        super().__init__(game)
+        self.levelName = levelName
+    
+    def run(self):
+        print('srigneùrijgeùrijrgij',self.game.levelLoader)
+        # self.game.levelLoader.changeLevel(self.levelName)
+    
+
+
+
+
 game = Game()
 game.run()
 

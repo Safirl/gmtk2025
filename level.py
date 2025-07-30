@@ -1,17 +1,25 @@
 class LevelLoader():
     def __init__(self):
-        self.levels = [MainScreenLevel(), ]
-        ["mainScreen","GameOverScreen", "street", "shoes"]
-        self.currentLevel: Level
+        self.levels = {
+            "mainScreen": MainScreenLevel(),
+            "gameOverScreen": GameOverLevel(),
+            "street": StreetLevel(),
+            "shoes": ShoesLevel()
+        }
+        self.currentLevel : Level = None
         
         pass
     
     def changeLevel(self, levelName: str):
-        if self.currentLevel is None:
+        if self.currentLevel:
             self.currentLevel.unloadLevel()
             self.currentLevel = None
             
-        self.currentLevel = self.levels[levelName]
+        self.currentLevel = self.levels.get(levelName)
+        if self.currentLevel:
+            self.currentLevel.loadLevel()
+        else:
+            print(f"Level '{levelName}' not found.")
         
         pass
     
@@ -21,52 +29,54 @@ class Level():
         self.name = name
         pass
     
-    def loadLevel():
+    def loadLevel(self):
+        print(f'Loading level: {self.name}')
         pass
     
-    def unloadLevel():
+    def unloadLevel(self):
+        print(f'Unloading level: {self.name}')
         pass
     
-class MainScreenLevel():
+class MainScreenLevel(Level):
     def __init__(self):
-        super.__init__(self, "mainScreen")        
+        super().__init__("mainScreen")        
         pass
     
-    def loadLevel():
-        pass
+    def loadLevel(self):
+        super().loadLevel()
+
+    def unloadLevel(self):
+        super().unloadLevel()
     
-    def unloadLevel():
-        pass
-    
-class GameOverLevel():
+class GameOverLevel(Level):
     def __init__(self):
-        super.__init__(self, "gameOverScreen")
+        super().__init__("gameOverScreen")
         pass
     
-    def loadLevel():
-        pass
+    def loadLevel(self):
+        super().loadLevel()
+
+    def unloadLevel(self):
+        super().unloadLevel()
     
-    def unloadLevel():
-        pass
-    
-class StreetLevel():
+class StreetLevel(Level):
     def __init__(self):
-        super.__init__(self, "street")
+        super().__init__("street")
         pass
     
-    def loadLevel():
-        pass
+    def loadLevel(self):
+        super().loadLevel()
+
+    def unloadLevel(self):
+        super().unloadLevel()
     
-    def unloadLevel():
-        pass
-    
-class ShoesLevel():
+class ShoesLevel(Level):
     def __init__(self):
-        super.__init__(self, "shoes")
+        super().__init__("shoes")
         pass
     
-    def loadLevel():
-        pass
-    
-    def unloadLevel():
-        pass
+    def loadLevel(self):
+        super().loadLevel()
+
+    def unloadLevel(self):
+        super().unloadLevel()
