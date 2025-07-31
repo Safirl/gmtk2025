@@ -1,6 +1,7 @@
 import random
+import pygame
 class Foot():
-    def __init__(self, legsPath="", footPath="", alphaLacesPath="", lacesPath="", unhappyPath="", happyPath="", hasLaces=True):
+    def __init__(self, legsPath="", footPath="", alphaLacesPath="", lacesPath="", unhappyPath="", happyPath="", hasLaces=True, index=0):
         self.legsPath = legsPath
         self.footPath = footPath
         self.alphaLacesPath = alphaLacesPath
@@ -8,8 +9,17 @@ class Foot():
         self.unhappyPath = unhappyPath
         self.happyPath = happyPath
         self.x = random.randint(0, 700)
-        self.y = random.randint(0, 500)
+        self.y = -500 - (index * 500)
+        # self.speed = random.uniform(5, 10)
+        self.speed = 5
         self.hasLaces = hasLaces
+        self.index = index
+        self.original_image = legsPath 
+        self.scale = 1.0  
+
+        self.width = 300
+        self.height = 400
+        self.rect = pygame.Rect(self.x, self.y, self.width, self.height)
 
         self.foots = [
     {
@@ -42,13 +52,31 @@ class Foot():
     def clear(self):
         pass
     
-
+    def move(self):
+        self.y += self.speed  
+        self.rect.y = self.y
+        self.rect.x = self.x
+        if self.rect.bottom > 1024: 
+            self.reset_position()
+    
+    def get_scaled_image(self):
+        self.scale = 0.5 + (self.y / 640)
+        self.scale = max(0.5, min(1.5, self.scale))
+        new_width = int(self.width * self.scale)
+        new_height = int(self.height * self.scale)
+        return pygame.transform.scale(self.original_image, (new_width, new_height))
+    
+    def reset_position(self):
+        self.y = -2500
+        self.x = random.randint(0, 700)
+        self.rect.x = self.x
+        self.rect.y = self.y
+        print('is reset', self.index)
 
     def getRandomLegs(self):
         # self.legs = random.choice(self.foots["legs"])
         pass
     
     def draw(self, surface):
-        # if self.legs:
-        #     surface.blit(self.legs, (self.x, self.y))
-        pass
+        if self.legsPath:
+            surface.blit(self.legsPath, (self.x, self.y))
