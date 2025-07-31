@@ -1,8 +1,10 @@
 import random
 class Foot():
-    def __init__(self, legsPath="", footPath="", hasLaces=True):
-        self.legsPath : str = legsPath
-        self.footPath : str = footPath
+    def __init__(self, legsPath="", footPath="", alphaLacesPath="", lacesPath="", hasLaces=True):
+        self.legsPath = legsPath
+        self.footPath = footPath
+        self.alphaLacesPath = alphaLacesPath
+        self.lacesPath = lacesPath
         self.x = random.randint(0, 700)
         self.y = random.randint(0, 500)
         self.hasLaces = hasLaces

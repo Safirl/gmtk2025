@@ -39,6 +39,8 @@ class UserInterface():
                 self.window.blit(render_item.surface, render_item.position)
             except Exception as e:
                 print(f"Error while rendering: {e}")
+                
+        self.clearRenderQueue()
         
         pygame.display.update()
         
@@ -80,12 +82,16 @@ class Game():
         self.commands.append(newCommand)
 
     def processInput(self):
+        mousePos = pygame.mouse.get_pos()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.running = False
-            elif event.type == pygame.MOUSEMOTION:
-                mousePos = pygame.mouse.get_pos()
-                event_bus.publish('mouse_moved', mousePos)
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                event_bus.publish('mouse_down', mousePos)
+            elif event.type == pygame.MOUSEBUTTONUP:
+                event_bus.publish('mouse_up')
+        
+        event_bus.publish('mouse_moved', mousePos)
 
     def update(self):
         event_bus.publish('game_update')
@@ -97,7 +103,7 @@ class Game():
         event_bus.publish('load_level', levelName, *args)
 
     def run(self):
-        foot = Foot("", "assets/foot.jpg", True)
+        foot = Foot("", "assets/foot.jpg", "assets/alpha/laces.png", "assets/laces/laces.png", True)
         self.loadLevel("shoes", foot)
         
         while self.running:

@@ -3,10 +3,10 @@ class Level:
         self.name = name
 
     def loadLevel(self, *args, **kwargs):
-        print(f"Base load for {self.name}")
+        print(f"Loading level {self.name}")
 
     def unloadLevel(self):
-        print(f"Base unload for {self.name}")
+        print(f"Unloading level for {self.name}")
 
     def update(self):
         pass
