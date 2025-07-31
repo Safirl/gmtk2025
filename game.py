@@ -3,6 +3,7 @@ import pygame
 from pygame import Vector2, Rect, Surface
 from eventBus import event_bus
 from foot import Foot
+from command import LoadLevelCommand
 
 os.environ['SDL_VIDEO_CENTERED'] = '1'
 
@@ -74,12 +75,21 @@ class Game():
         
         self.commands = []
         event_bus.subscribe("queue_command", self.queueCommand)
+        event_bus.subscribe("start_game", self.startGame)
         
         self.clock = pygame.time.Clock()
+        self.timer = 60. #in seconds
         self.running = True
+        self.isGameRunning = False
     
     def queueCommand(self, newCommand):
         self.commands.append(newCommand)
+        
+    def startGame(self):
+        self.isGameRunning = True
+        command = LoadLevelCommand("street")#ajouter des args si besoin
+        event_bus.publish("queue_command", command)
+        
 
     def processInput(self):
         mousePos = pygame.mouse.get_pos()
@@ -94,17 +104,25 @@ class Game():
         event_bus.publish('mouse_moved', mousePos)
 
     def update(self):
+        
         event_bus.publish('game_update')
         for command in self.commands:
             command.run()
         self.commands.clear()
+        
+        if not self.isGameRunning:
+            return
+        if self.clock.get_fps() != 0.:
+            dt = self.clock.tick(60) / 1000.0
+            self.timer -= dt
 
     def loadLevel(self, levelName, *args):
         event_bus.publish('load_level', levelName, *args)
 
     def run(self):
-        foot = Foot("", "assets/foot.jpg", "assets/alpha/laces.png", "assets/laces/laces.png", True)
-        self.loadLevel("shoes", foot)
+        # foot = Foot("", "assets/foot.jpg", "assets/alpha/laces.png", "assets/laces/laces.png", True)
+        # self.loadLevel("shoes", foot)
+        self.loadLevel("mainScreen")
         
         while self.running:
             self.processInput()
