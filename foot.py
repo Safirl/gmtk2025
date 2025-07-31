@@ -1,10 +1,12 @@
 import random
 class Foot():
-    def __init__(self, legsPath="", footPath="", alphaLacesPath="", lacesPath="", hasLaces=True):
+    def __init__(self, legsPath="", footPath="", alphaLacesPath="", lacesPath="", unhappyPath="", happyPath="", hasLaces=True):
         self.legsPath = legsPath
         self.footPath = footPath
         self.alphaLacesPath = alphaLacesPath
         self.lacesPath = lacesPath
+        self.unhappyPath = unhappyPath
+        self.happyPath = happyPath
         self.x = random.randint(0, 700)
         self.y = random.randint(0, 500)
         self.hasLaces = hasLaces
