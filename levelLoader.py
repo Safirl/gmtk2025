@@ -28,13 +28,13 @@ class LevelLoader():
         # S'abonner à l'événement de chargement de niveau
         event_bus.subscribe('load_level', self.changeLevel)
 
-    def changeLevel(self, levelName: str):
+    def changeLevel(self, levelName: str, *args):
         if self.currentLevel:
             self.currentLevel.unloadLevel()
             self.currentLevel = None
         
         self.currentLevel = self.levels.get(levelName)
         if self.currentLevel:
-            self.currentLevel.loadLevel()
+            self.currentLevel.loadLevel(*args)
         else:
             print(f"Level '{levelName}' not found.")

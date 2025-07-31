@@ -4,11 +4,9 @@ from levelLoader import LevelLoader
 
 def main():
     try:
-        # Créer les composants
         game = Game()
-        levelLoader = LevelLoader()  # Il s'enregistre automatiquement aux événements
+        levelLoader = LevelLoader()
         
-        # Lancer le jeu
         game.run()
         
     except Exception as e:
@@ -16,5 +14,4 @@ def main():
     finally:
         pygame.quit()
 
-if __name__ == "__main__":
-    main()
+main()

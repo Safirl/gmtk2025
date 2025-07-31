@@ -1,6 +1,6 @@
 import pygame
 import random
-from ..foot import Foot
+from foot import Foot
 
 from level import Level
 
