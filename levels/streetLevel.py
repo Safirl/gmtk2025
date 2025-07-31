@@ -4,11 +4,12 @@ from foot import Foot
 
 from level import Level
 
-LEG_IMAGES = [
-            pygame.image.load("assets/legs/legs1.png").convert_alpha(),
-            pygame.image.load("assets/legs/legs2.png").convert_alpha(),
-            pygame.image.load("assets/legs/legs3.png").convert_alpha(),
-            pygame.image.load("assets/legs/legs4.png").convert_alpha()
+# LOAD IMAGES ONCES
+legImage = [
+            pygame.image.load("assets/legs/legs1.png"),
+            pygame.image.load("assets/legs/legs2.png"),
+            pygame.image.load("assets/legs/legs3.png"),
+            pygame.image.load("assets/legs/legs4.png")
         ]
 
 class StreetLevel(Level):
@@ -18,12 +19,21 @@ class StreetLevel(Level):
     
     def loadLevel(self):
         super().loadLevel()
+        for i in range(11):
+            foot = Foot(legImage)
+            foot.getRandomLegs()
+            i = i+1
+            self.feet.append(foot)
+
 
     def unloadLevel(self):
         super().unloadLevel()
         self.feet.clear()
     
-    def update(self):
-        super().update()
+    def update(self, surface):
+        for foot in self.feet:
+            foot.draw(surface)
+
+        pygame.display.flip()
         
 
