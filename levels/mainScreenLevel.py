@@ -24,9 +24,9 @@ class MainScreenLevel(Level):
     def loadLevel(self):
         super().loadLevel()
         pygame.font.init()
-        h1 = pygame.font.Font("assets/fonts/Bubble.ttf", 30)
-        self.title = h1.render("C'est bouclé !", True, (0,255,255,255))
-        print(self.title)
+        h1 = pygame.font.Font("assets/fonts/Bubble.ttf", 42)
+        self.buttonFont = pygame.font.Font("assets/fonts/Bubble.ttf", 24)
+        self.title = h1.render("C'est bouclé !", True, (255,255,255,255))
 
     def unloadLevel(self):
         super().unloadLevel()
@@ -34,3 +34,6 @@ class MainScreenLevel(Level):
     def update(self):
         titlePos = (self.title.get_size()[0]/2 + 64, self.title.get_size()[1]/2 + 64)
         event_bus.publish("add_surface_to_render", self.title, [titlePos[0], titlePos[1]], 10)
+        for item in self.menuItems:
+            button = self.buttonFont.render(item["title"], True, (255,255,255,255))
+            event_bus.publish("add_surface_to_render", button, [titlePos[0] + 64, titlePos[1] + 64], 10)
