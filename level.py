@@ -10,6 +10,7 @@ class Level:
 
     def unloadLevel(self):
         event_bus.unsubscribe('game_update', self.update)
+        event_bus.publish("clear_render_queue", True)
         print(f"Unloading level for {self.name}")
 
     def update(self):
