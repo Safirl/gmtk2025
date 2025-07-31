@@ -39,6 +39,8 @@ class UserInterface():
                 self.window.blit(render_item.surface, render_item.position)
             except Exception as e:
                 print(f"Error while rendering: {e}")
+                
+        self.clearRenderQueue()
         
         pygame.display.update()
         
@@ -83,9 +85,9 @@ class Game():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.running = False
-            elif event.type == pygame.MOUSEMOTION:
-                mousePos = pygame.mouse.get_pos()
-                event_bus.publish('mouse_moved', mousePos)
+        
+        mousePos = pygame.mouse.get_pos()
+        event_bus.publish('mouse_moved', mousePos)
 
     def update(self):
         event_bus.publish('game_update')

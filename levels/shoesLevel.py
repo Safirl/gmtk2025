@@ -3,23 +3,22 @@ from eventBus import event_bus
 from command import Command
 from foot import Foot
 import pygame
-from pygame import Vector2
+from pygame import Vector2, Surface
 import os
 
 class ShoesLevel(Level):
     def __init__(self):
         super().__init__("shoes")
+        self.armTexture = pygame.image.load("assets/armPicking.png")
 
     def loadLevel(self, foot: Foot):
         if not foot:
             print("Foot is not valid for level: ", self.name)
             return
         self.foot = foot
-        
         event_bus.subscribe('mouse_moved', self.onMouseMoved)
         event_bus.subscribe('game_update', self.onUpdate)
-        command = ShowFootAnimation(self.foot, Vector2(1024/2, 640/2))
-        event_bus.publish("queue_command", command)
+        
         return super().loadLevel()
 
     def unloadLevel(self):
@@ -28,6 +27,8 @@ class ShoesLevel(Level):
         return super().unloadLevel()
 
     def onUpdate(self):
+        command = ShowFootCommand(self.foot, Vector2(1024/2, 640/2))
+        event_bus.publish("queue_command", command)
         if not self.foot.hasLaces:
             return
         
@@ -35,18 +36,21 @@ class ShoesLevel(Level):
 
     def onMouseMoved(self, newPos):
         #print(f"Mouse moved in shoes level: {newPos}")
-        command = ShoesMouseMovedCommand(newPos)
+        command = ShoesMouseMovedCommand(newPos, self.armTexture)
         event_bus.publish("queue_command", command)
         
         
 class ShoesMouseMovedCommand(Command):
-    def __init__(self, newPos):
-        self.pos = newPos
+    def __init__(self, newPos, armTexture: Surface):
+        self.pos = Vector2(newPos)
+        self.pos.y += armTexture.get_height()/2
+        self.armTexture = armTexture
     
     def run(self):
+        event_bus.publish("add_surface_to_render", self.armTexture, [self.pos[0], self.pos[1]], 2)
         pass
     
-class ShowFootAnimation(Command):
+class ShowFootCommand(Command):
     def __init__(self, foot: Foot, position):
         self.foot = foot
         self.position = position
