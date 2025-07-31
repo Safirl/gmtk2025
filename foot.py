@@ -1,7 +1,7 @@
 import random
 import pygame
 class Foot():
-    def __init__(self, legsPath="", footPath="", alphaLacesPath="", lacesPath="", hasLaces=True):
+    def __init__(self, legsPath="", footPath="", alphaLacesPath="", lacesPath="", hasLaces=True, index=0):
         self.legsPath = legsPath
         self.footPath = footPath
         self.alphaLacesPath = alphaLacesPath
