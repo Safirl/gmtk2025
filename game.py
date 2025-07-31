@@ -3,6 +3,7 @@ import pygame
 from pygame import Vector2, Rect, Surface
 from eventBus import event_bus
 from foot import Foot
+from command import LoadLevelCommand
 
 os.environ['SDL_VIDEO_CENTERED'] = '1'
 
@@ -74,6 +75,7 @@ class Game():
         
         self.commands = []
         event_bus.subscribe("queue_command", self.queueCommand)
+        event_bus.subscribe("start_game", self.startGame)
         
         self.clock = pygame.time.Clock()
         self.timer = 60. #in seconds
@@ -82,6 +84,12 @@ class Game():
     
     def queueCommand(self, newCommand):
         self.commands.append(newCommand)
+        
+    def startGame(self):
+        self.isGameRunning = True
+        command = LoadLevelCommand("street")#ajouter des args si besoin
+        event_bus.publish("queue_command", command)
+        
 
     def processInput(self):
         mousePos = pygame.mouse.get_pos()
