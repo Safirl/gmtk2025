@@ -7,7 +7,7 @@ from pygame import Vector2, Surface, Rect
 import os
 import numpy
 
-seuil = 3.5
+seuil = 4
 
 class ShoesLevel(Level):
     def __init__(self):
@@ -32,7 +32,6 @@ class ShoesLevel(Level):
         event_bus.subscribe('mouse_moved', self.onMouseMoved)
         event_bus.subscribe('mouse_down', self.onMouseDown)
         event_bus.subscribe('mouse_up', self.onMouseUp)
-        event_bus.subscribe('game_update', self.onUpdate)
         
         return super().loadLevel()
 
@@ -41,7 +40,7 @@ class ShoesLevel(Level):
         event_bus.unsubscribe('game_update', self.onUpdate)
         return super().unloadLevel()
 
-    def onUpdate(self):
+    def update(self):
         event_bus.publish("add_surface_to_render", self.footTexture, [1024/2, 640/2], 1)
         event_bus.publish("add_surface_to_render", self.lacesTexture, [1024/2, 640/2], 2)
         if not self.foot.hasLaces:
