@@ -82,11 +82,15 @@ class Game():
         self.commands.append(newCommand)
 
     def processInput(self):
+        mousePos = pygame.mouse.get_pos()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.running = False
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                event_bus.publish('mouse_down', mousePos)
+            elif event.type == pygame.MOUSEBUTTONUP:
+                event_bus.publish('mouse_up')
         
-        mousePos = pygame.mouse.get_pos()
         event_bus.publish('mouse_moved', mousePos)
 
     def update(self):
