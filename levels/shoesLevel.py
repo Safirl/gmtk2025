@@ -5,6 +5,9 @@ from foot import Foot
 import pygame
 from pygame import Vector2, Surface, Rect
 import os
+import numpy
+
+seuil = 3.5
 
 class ShoesLevel(Level):
     def __init__(self):
@@ -20,6 +23,7 @@ class ShoesLevel(Level):
             print(f"Image not found: {self.foot.footPath}")
             return
         self.footTexture = pygame.image.load(self.foot.footPath)
+        self.lacesTexture = pygame.image.load(self.foot.lacesPath)
         self.drawnLacesSurface = Surface((1024, 640), pygame.SRCALPHA)
         self.isMousePressed = False
         self.lastMousePos: tuple[int,int] = None
@@ -39,11 +43,12 @@ class ShoesLevel(Level):
 
     def onUpdate(self):
         event_bus.publish("add_surface_to_render", self.footTexture, [1024/2, 640/2], 1)
+        event_bus.publish("add_surface_to_render", self.lacesTexture, [1024/2, 640/2], 2)
         if not self.foot.hasLaces:
             return
         if self.isMousePressed:
             rect = Rect(self.mousePos[0], self.mousePos[1], 10, 10)
-            pygame.draw.line(self.drawnLacesSurface, (0, 0, 255), self.lastMousePos, self.mousePos, 10)
+            pygame.draw.line(self.drawnLacesSurface, (0, 0, 255), self.lastMousePos, self.mousePos, 15)
         
         super().update()
 
@@ -51,7 +56,7 @@ class ShoesLevel(Level):
         if self.mousePos is not None:
             self.lastMousePos = self.mousePos
         self.mousePos = newPos
-        event_bus.publish("add_surface_to_render", self.drawnLacesSurface, [1024/2,640/2], 2)
+        event_bus.publish("add_surface_to_render", self.drawnLacesSurface, [1024/2,640/2], 3)
         command = ShoesMouseMovedCommand(newPos, self.armTexture)
         event_bus.publish("queue_command", command)
     
@@ -60,30 +65,38 @@ class ShoesLevel(Level):
         
     def onMouseUp(self):
         self.isMousePressed = False
-        pass
-        
-        
-class CompleteLaces(Command):
-    def __init__(self, lacesTexture: Surface):
+        alphaTexture = pygame.image.load(self.foot.alphaLacesPath)
+        command = CompleteLacesCommand(self.drawnLacesSurface, alphaTexture)
+        event_bus.publish("queue_command", command)
+    
+
+class CompleteLacesCommand(Command):
+    def __init__(self, lacesTexture: Surface, completeLacesAlphatexture: Surface):
         self.lacesTexture = lacesTexture
+        self.completeLacesTexture = completeLacesAlphatexture
     
     def run(self):
-        event_bus.publish("add_surface_to_render", self.armTexture, [self.pos[0], self.pos[1]], 2)
-        pass
+        diff = self.getAlphaDifferencePercentage(self.lacesTexture, self.completeLacesTexture)
+        if diff >= seuil:
+            print("you lost! :", diff)
+        else:
+            print("you won! :", diff)
+    
+    def getAlphaDifferencePercentage(self, texture1: Surface, texture2: Surface):
+        if texture1.get_size() != texture2.get_size():
+            return
         
-class DrawLacesCommand(Command):
-    def __init__(self, newPos, surface: Surface):
-        self.pos = Vector2(newPos)
-        self.surface = surface
-    
-    def run(self):
-        # texture = Surface((10, 10))
-        # texture.fill((0, 0, 255))
-        # rect = Rect(self.pos[0], self.pos[1], 10, 10)
-        # pygame.draw.rect(self.surface,(0,0,255), rect)
-        # self.surface.(self.rect.surface, self.rect.position)
-        event_bus.publish("add_surface_to_render", self.surface, [1024/2,640/2], 2)
-        pass
+        alpha1 = pygame.surfarray.pixels_alpha(texture1)
+        alpha2 = pygame.surfarray.pixels_alpha(texture2)
+        
+        diff = numpy.abs(alpha1.astype(int) - alpha2.astype(int))
+        
+        total_pixels = alpha1.shape[0] * alpha1.shape[1]
+        max_diff = 255 * total_pixels
+        percent_diff = numpy.sum(diff) / max_diff * 100
+        
+        return percent_diff
+        
     
 class ShoesMouseMovedCommand(Command):
     def __init__(self, newPos, armTexture: Surface):
@@ -92,6 +105,6 @@ class ShoesMouseMovedCommand(Command):
         self.armTexture = armTexture
     
     def run(self):
-        event_bus.publish("add_surface_to_render", self.armTexture, [self.pos[0], self.pos[1]], 2)
+        event_bus.publish("add_surface_to_render", self.armTexture, [self.pos[0], self.pos[1]], 4)
         pass
     

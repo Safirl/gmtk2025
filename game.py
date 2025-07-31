@@ -103,7 +103,7 @@ class Game():
         event_bus.publish('load_level', levelName, *args)
 
     def run(self):
-        foot = Foot("", "assets/foot.jpg", True)
+        foot = Foot("", "assets/foot.jpg", "assets/alpha/laces.png", "assets/laces/laces.png", True)
         self.loadLevel("shoes", foot)
         
         while self.running:

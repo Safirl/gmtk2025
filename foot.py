@@ -1,7 +1,9 @@
 class Foot():
-    def __init__(self, legsPath="", footPath="", hasLaces=True):
+    def __init__(self, legsPath="", footPath="", alphaLacesPath="", lacesPath="", hasLaces=True):
         self.legsPath = legsPath
         self.footPath = footPath
+        self.alphaLacesPath = alphaLacesPath
+        self.lacesPath = lacesPath
         self.hasLaces = hasLaces
     
     def animate(seft):
