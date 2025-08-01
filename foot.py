@@ -20,22 +20,14 @@ laces = [
         "alphaLacesPath": "assets/alpha/laces4Alpha.png",
         "lacesPath": "assets/laces/laces4.png"
     },
-    # {
-    #     "alphaLacesPath": "assets/alpha/laces1Alpha.png",
-    #     "lacesPath": "assets/laces/laces1.png"
-    # },
-    # {
-    #     "alphaLacesPath": "assets/alpha/laces1Alpha.png",
-    #     "lacesPath": "assets/laces/laces1.png"
-    # },
 ]
 
 footDic = [
     {
         "legsPath": "assets/legs/legs1.png",
         "footPath": "assets/foot/RedFoot.png",
-        "unhappyPath": "assets/shoesLevel/unhappy.png",
-        "happyPath": "assets/shoesLevel/happy.png",
+        "unhappyPath": "assets/reactions/characterRedShoesAngry.png",
+        "happyPath": "assets/reactions/characterRedShoesHappy.png",
         "neutralPath": "",
         "hasLaces": True,
     },
@@ -43,23 +35,7 @@ footDic = [
         "legsPath": "assets/legs/legs2.png",
         "footPath": "assets/foot/RedFoot.png",
         "unhappyPath": "assets/shoesLevel/unhappy.png",
-        "happyPath": "assets/shoesLevel/happy.png",
-        "neutralPath": "",
-        "hasLaces": True
-    },
-    {
-        "legsPath": "assets/legs/legs3.png",
-        "footPath": "assets/foot/RedFoot.png",
-        "unhappyPath": "assets/shoesLevel/unhappy.png",
-        "happyPath": "assets/shoesLevel/happy.png",
-        "neutralPath": "",
-        "hasLaces": True
-    },
-    {
-        "legsPath": "assets/legs/legs4.png",
-        "footPath": "assets/foot/RedFoot.png",
-        "unhappyPath": "assets/shoesLevel/unhappy.png",
-        "happyPath": "assets/shoesLevel/happy.png",
+        "happyPath": "assets/reactions/characterBrownShoesHappy.png",
         "neutralPath": "",
         "hasLaces": True
     },

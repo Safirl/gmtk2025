@@ -20,7 +20,6 @@ class StreetLevel(Level):
         for i in range(6):
             args = footDic[random.randint(0, len(footDic) - 1)]
             foot = Foot(args["legsPath"], args["footPath"], args["unhappyPath"], args["happyPath"], args["hasLaces"], i)
-            print(f"Created foot {i}")  
             self.feet.append(foot)
         
         self.isActive = True

@@ -63,6 +63,8 @@ class ShoesLevel(Level):
         super().update()
 
     def onMouseMoved(self, newPos):
+        if not self.isLevelRunning:
+            return
         if self.mousePos is not None:
             self.lastMousePos = self.mousePos
         self.mousePos = newPos
