@@ -92,6 +92,8 @@ class UserInterface():
 class Game():
     def __init__(self):
         pygame.init()
+        pygame.mixer.init()
+        
         self.ui = UserInterface()
         self.delayedManager = DelayedCommandManager()
         

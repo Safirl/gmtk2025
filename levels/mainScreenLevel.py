@@ -35,6 +35,9 @@ class MainScreenLevel(Level):
         self.buttonRects.clear()
 
         event_bus.subscribe("mouse_up", self.onMouseUp)
+        
+        self.music = pygame.mixer.music.load("assets/sounds/sneaky-feet.mp3")
+        pygame.mixer.music.play(-1)
 
     def unloadLevel(self):
         super().unloadLevel()
