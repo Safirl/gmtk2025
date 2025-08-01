@@ -1,6 +1,6 @@
 from level import Level
 from eventBus import event_bus
-from command import Command
+from command import Command, LoadLevelCommand
 from foot import Foot
 import pygame
 from pygame import Vector2, Surface, Rect
@@ -42,7 +42,9 @@ class ShoesLevel(Level):
 
     def unloadLevel(self):
         event_bus.unsubscribe('mouse_moved', self.onMouseMoved)
-        event_bus.unsubscribe('game_update', self.onUpdate)
+        event_bus.unsubscribe('mouse_down', self.onMouseDown)
+        event_bus.unsubscribe('mouse_up', self.onMouseUp)
+        self.isLevelRunning = False
         return super().unloadLevel()
 
     def update(self):
@@ -89,17 +91,17 @@ class CompleteLacesCommand(Command):
         alphaTexture = pygame.image.load(self.foot.alphaLacesPath)
         diff = self.getAlphaDifferencePercentage(alphaTexture, self.drawnTexture)
         faceTexture = None
-        print(diff)
         if diff >= seuil:
             event_bus.publish("on_timer_changed", -3.)
             faceTexture = pygame.image.load(self.foot.unhappyPath)
-            print("perdu ", self.foot.unhappyPath)
         else:
             event_bus.publish("on_timer_changed", 3.)
             faceTexture = pygame.image.load(self.foot.happyPath)
-            print("gagné ", self.foot.happyPath)
             
         event_bus.publish("add_surface_to_render", faceTexture, [1024-faceTexture.get_width()/2,0+faceTexture.get_height()/2], 4, True)
+        
+        loadLevel = LoadLevelCommand("street")
+        event_bus.publish("queue_delayed_command", 10., loadLevel)
     
     def getAlphaDifferencePercentage(self, texture1: Surface, texture2: Surface):
         if texture1.get_size() != texture2.get_size():

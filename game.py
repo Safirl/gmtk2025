@@ -3,7 +3,7 @@ import pygame
 from pygame import Vector2, Rect, Surface
 from eventBus import event_bus
 from foot import Foot
-import pytweening
+from command import Command
 
 os.environ['SDL_VIDEO_CENTERED'] = '1'
 
@@ -93,6 +93,7 @@ class Game():
     def __init__(self):
         pygame.init()
         self.ui = UserInterface()
+        self.delayedManager = DelayedCommandManager()
         
         self.commands = []
         event_bus.subscribe("queue_command", self.queueCommand)
@@ -149,5 +150,22 @@ class Game():
         while self.running:
             self.processInput()
             self.update()
+            self.delayedManager.update()
             self.ui.render()
             self.clock.tick(60)
+            
+class DelayedCommandManager:
+    def __init__(self):
+        event_bus.subscribe("queue_delayed_command", self.add)
+        self.commands = []
+
+    def add(self, delay_seconds: float, command: Command):
+        due_time = pygame.time.get_ticks() + int(delay_seconds * 1000)
+        self.commands.append((due_time, command))
+
+    def update(self):
+        now = pygame.time.get_ticks()
+        ready = [cmd for due, cmd in self.commands if due <= now]
+        self.commands = [(due, cmd) for due, cmd in self.commands if due > now]
+        for cmd in ready:
+            cmd.run()
