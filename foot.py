@@ -4,28 +4,51 @@ import pygame
 #laces drawing
 laces = [
     {
-        "alphaLacesPath": "assets/alpha/laces.png",
-        "lacesPath": "assets/laces/laces.png"
+        "alphaLacesPath": "assets/alpha/laces1Alpha.png",
+        "lacesPath": "assets/laces/laces1.png"
     },
     {
-        "alphaLacesPath": "assets/alpha/laces.png",
-        "lacesPath": "assets/laces/laces.png"
+        "alphaLacesPath": "assets/alpha/laces2Alpha.png",
+        "lacesPath": "assets/laces/laces2.png"
     },
     {
-        "alphaLacesPath": "assets/alpha/laces.png",
-        "lacesPath": "assets/laces/laces.png"
+        "alphaLacesPath": "assets/alpha/laces3Alpha.png",
+        "lacesPath": "assets/laces/laces3.png"
     },
     {
-        "alphaLacesPath": "assets/alpha/laces.png",
-        "lacesPath": "assets/laces/laces.png"
+        "alphaLacesPath": "assets/alpha/laces4Alpha.png",
+        "lacesPath": "assets/laces/laces4.png"
+    },
+    # {
+    #     "alphaLacesPath": "assets/alpha/laces1Alpha.png",
+    #     "lacesPath": "assets/laces/laces1.png"
+    # },
+    # {
+    #     "alphaLacesPath": "assets/alpha/laces1Alpha.png",
+    #     "lacesPath": "assets/laces/laces1.png"
+    # },
+]
+
+foot = [
+    {
+        "legs": "assets/legs1.png",
+        "foot": "assets/foot/RedFoot.png",
+        "hasLaces": True
     },
     {
-        "alphaLacesPath": "assets/alpha/laces.png",
-        "lacesPath": "assets/laces/laces.png"
+        "legs": "assets/legs2.png",
+        "foot": "",
+        "hasLaces": True
     },
     {
-        "alphaLacesPath": "assets/alpha/laces.png",
-        "lacesPath": "assets/laces/laces.png"
+        "legs": "assets/legs3.png",
+        "foot": "",
+        "hasLaces": True
+    },
+    {
+        "legs": "assets/legs4.png",
+        "foot": "",
+        "hasLaces": True
     },
 ]
 

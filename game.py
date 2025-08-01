@@ -32,7 +32,7 @@ class UserInterface():
         event_bus.subscribe("remove_surface", self.removeSurface)
         
         #animation
-        self.progress = 0
+        # self.progress = 0
 
     def render(self):
         self.window.fill((0, 0, 0))
@@ -98,21 +98,28 @@ class Game():
         self.commands = []
         event_bus.subscribe("queue_command", self.queueCommand)
         event_bus.subscribe("start_game", self.startGame)
+        event_bus.subscribe("on_timer_changed", self.addTime)
         
         self.clock = pygame.time.Clock()
-        self.timer = 60. #in seconds
+        self.totalTime = 60.#in seconds
+        self.timer = self.totalTime
         self.running = True
         self.isGameRunning = False
+        self.timerImage = pygame.image.load("assets/timer.png")
+        self.clockImage = pygame.image.load("assets/clock.png")
+        self.score = 0
     
     def queueCommand(self, newCommand):
         self.commands.append(newCommand)
         
     def startGame(self):
         self.isGameRunning = True
-        foot = Foot("", "assets/foot.jpg", "assets/shoesLevel/unhappy.png", "assets/shoesLevel/happy.png", True)
+        foot = Foot("", "assets/foot/RedFoot.png", "assets/shoesLevel/unhappy.png", "assets/shoesLevel/happy.png", True)
         
         self.loadLevel("shoes", foot)
         
+    def addTime(self, time:float):
+        self.timer += time
 
     def processInput(self):
         mousePos = pygame.mouse.get_pos()
@@ -127,7 +134,6 @@ class Game():
         event_bus.publish('mouse_moved', mousePos)
 
     def update(self):
-        
         event_bus.publish('game_update')
         for command in self.commands:
             command.run()
@@ -138,6 +144,32 @@ class Game():
         if self.clock.get_fps() != 0.:
             dt = self.clock.tick(60) / 1000.0
             self.timer -= dt
+        
+        if self.timer <= 0:
+            self.loadLevel("gameOverScreen")
+            self.isGameRunning = False
+            return
+        
+        percent = max(0.0, min(1.0, self.timer / self.totalTime))
+        
+        r = int((1 - percent) * 255)
+        g = int(percent * 255)
+        color = (r, g, 0, 255)
+        
+        bar_width = 403 * percent
+        bar_height = 41
+        topOffset = 32
+        stroke = 3.07
+
+        surface = pygame.Surface((self.timerImage.get_width(), bar_height), pygame.SRCALPHA)
+        surface.fill((0, 0, 0, 0))  # Transparent
+
+        rect = Rect(0, 0, bar_width, bar_height)
+        pygame.draw.rect(surface, color, rect, border_radius=bar_height // 2)
+
+        event_bus.publish("add_surface_to_render", self.timerImage, [1024/2, self.timerImage.get_height()/2 + topOffset], 11)
+        event_bus.publish("add_surface_to_render", surface, [1024/2 + stroke, bar_height/2 + topOffset + stroke], 11)
+        event_bus.publish("add_surface_to_render", self.clockImage, [1024/2 - self.timerImage.get_width()/2, self.timerImage.get_height()/2 + topOffset], 11)
 
     def loadLevel(self, levelName, *args):
         event_bus.publish('load_level', levelName, *args)
@@ -152,7 +184,7 @@ class Game():
             self.ui.render()
             self.clock.tick(60)
             
-class DelayedCommandManager:
+class DelayedCommandManager():
     def __init__(self):
         event_bus.subscribe("queue_delayed_command", self.add)
         self.commands = []
