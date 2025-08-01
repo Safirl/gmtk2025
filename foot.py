@@ -24,7 +24,7 @@ laces = [
 
 footDic = [
     {
-        "legsPath": "assets/legs/legs1.png",
+        "legsPath": "assets/legs/characterRedShoes1.PNG",
         "footPath": "assets/foot/redFoot.png",
         "unhappyPath": "assets/reactions/characterRedShoesAngry.png",
         "happyPath": "assets/reactions/characterRedShoesHappy.png",
@@ -32,11 +32,11 @@ footDic = [
         "hasLaces": True,
     },
     {
-        "legsPath": "assets/legs/legs2.png",
+        "legsPath": "assets/legs/characterBrownShoes.png",
         "footPath": "assets/foot/brownFoot.png",
-        "unhappyPath": "assets/shoesLevel/unhappy.png",
+        "unhappyPath": "assets/shoesLevel/characterBrownShoesAngry.png",
         "happyPath": "assets/reactions/characterBrownShoesHappy.png",
-        "neutralPath": "assets/reactions/characterRedShoesSurprised.png",
+        "neutralPath": "assets/reactions/characterBrownShoesSurprised.png",
         "hasLaces": True
     },
 ]
