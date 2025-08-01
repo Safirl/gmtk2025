@@ -1,38 +1,38 @@
 import pygame
 import random
-from foot import Foot
+from foot import Foot, footDic
 from level import Level
 from eventBus import event_bus
-
-# LOAD IMAGES ONCES
-legsPath = [
-            pygame.image.load("assets/legs/legs1.png"),
-            pygame.image.load("assets/legs/legs2.png"),
-            pygame.image.load("assets/legs/legs3.png"),
-            pygame.image.load("assets/legs/legs4.png")
-        ]
+from player import Player
+from command import LoadLevelCommand
 
 class StreetLevel(Level):
     def __init__(self):
         super().__init__("street")
         self.feet = []
-
+        self.player = Player()
         self.background = pygame.image.load("assets/backgroundStreet.png")
-        print("StreetLevel initialized") 
-        print("StreetLevel initialized") 
+        self.isActive = False
+
     
     def loadLevel(self, *args, **kwargs ):
-        print("Street screen loaded.")
-        super().loadLevel()
-        self.feet.clear()
+        # self.feet.clear()
         for i in range(6):
-            leg_img = random.choice(legsPath)  
-            foot = Foot(legsPath=leg_img, index=i) 
-            print(f"Created foot with image: {leg_img}")  
+            args = footDic[random.randint(0, len(footDic) - 1)]
+            foot = Foot(args["legsPath"], args["footPath"], args["unhappyPath"], args["happyPath"], args["hasLaces"], i)
+            print(f"Created foot {i}")  
             self.feet.append(foot)
         
+        self.isActive = True
+        super().loadLevel()
+    
+    def unloadLevel(self):
+        self.isActive = False
+        self.feet.clear()
+        super().unloadLevel()
 
-        event_bus.subscribe('game_update', self.update)
+    def onMouseMoved(self, pos):
+        self.player.follow_mouse(pos)
 
     def update(self, surface=None):
         event_bus.publish(
@@ -50,4 +50,11 @@ class StreetLevel(Level):
                 [foot.x, foot.y],
                 1
             )
+            if foot.rect.colliderect(self.player.rect):
+                print("foot: ", foot)
+                loadLevel = LoadLevelCommand("shoes", foot)
+                event_bus.publish("queue_command", loadLevel)
+                return
+            
+        self.player.update()
     
