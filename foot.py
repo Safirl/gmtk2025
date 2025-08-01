@@ -8,25 +8,25 @@ laces = [
         "lacesPath": "assets/laces/laces1.png"
     },
     {
-        "alphaLacesPath": "assets/alpha/laces1Alpha.png",
-        "lacesPath": "assets/laces/laces1.png"
+        "alphaLacesPath": "assets/alpha/laces2Alpha.png",
+        "lacesPath": "assets/laces/laces2.png"
     },
     {
-        "alphaLacesPath": "assets/alpha/laces1Alpha.png",
-        "lacesPath": "assets/laces/laces1.png"
+        "alphaLacesPath": "assets/alpha/laces3Alpha.png",
+        "lacesPath": "assets/laces/laces3.png"
     },
     {
-        "alphaLacesPath": "assets/alpha/laces1Alpha.png",
-        "lacesPath": "assets/laces/laces1.png"
+        "alphaLacesPath": "assets/alpha/laces4Alpha.png",
+        "lacesPath": "assets/laces/laces4.png"
     },
-    {
-        "alphaLacesPath": "assets/alpha/laces1Alpha.png",
-        "lacesPath": "assets/laces/laces1.png"
-    },
-    {
-        "alphaLacesPath": "assets/alpha/laces1Alpha.png",
-        "lacesPath": "assets/laces/laces1.png"
-    },
+    # {
+    #     "alphaLacesPath": "assets/alpha/laces1Alpha.png",
+    #     "lacesPath": "assets/laces/laces1.png"
+    # },
+    # {
+    #     "alphaLacesPath": "assets/alpha/laces1Alpha.png",
+    #     "lacesPath": "assets/laces/laces1.png"
+    # },
 ]
 
 foot = [
