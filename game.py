@@ -116,7 +116,7 @@ class Game():
         self.isGameRunning = True
         foot = Foot("", "assets/foot/RedFoot.png", "assets/shoesLevel/unhappy.png", "assets/shoesLevel/happy.png", True)
         
-        self.loadLevel("shoes", foot)
+        self.loadLevel("street", foot)
         
     def addTime(self, time:float):
         self.timer += time
