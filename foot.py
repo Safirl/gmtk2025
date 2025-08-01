@@ -30,12 +30,7 @@ laces = [
 ]
 
 class Foot():
-    def __init__(self, legsPath="", footPath="", unhappyPath="", happyPath="", hasLaces=True, index=0):
-        self.legsPath = legsPath
-        self.footPath = footPath
-        self.unhappyPath = unhappyPath
-        self.happyPath = happyPath
-    def __init__(self, legsPath="", footPath="", alphaLacesPath="", lacesPath="", hasLaces=True, index=0):
+    def __init__(self, legsPath="", footPath="", alphaLacesPath="", lacesPath="",  unhappyPath="", happyPath="", hasLaces=True, index=0):
             
         self.foots = [
             {
@@ -59,19 +54,24 @@ class Foot():
                 "hasLaces": True
             },
             ]
+        self.unhappyPath = unhappyPath
+        self.happyPath = happyPath
+        print('coucou')
         selected_foot = random.choice(self.foots)
+        print('selected_foot', str(selected_foot["legs"]))
+        self.legsImage = pygame.image.load(str(selected_foot["legs"]))
         self.legsPath = pygame.image.load(selected_foot["legs"])
         self.footPath = selected_foot["foot"]
-        self.lacesPath = selected_foot["laces"]
         self.hasLaces = selected_foot["hasLaces"]
         self.alphaLacesPath = alphaLacesPath
+        self.lacesPath = lacesPath
 
         self.x = random.randint(0, 700)
         self.y = -500 - (index * 500)
         self.speed = 5
         self.hasLaces = hasLaces
         self.index = index
-        self.original_image = legsPath 
+        self.original_image = self.legsImage
         self.scale = 1.0  
 
         self.width = 300
@@ -108,10 +108,6 @@ class Foot():
         self.rect.x = self.x
         self.rect.y = self.y
         print('is reset', self.index)
-
-    # def getRandomLegs(self):
-    #     # self.legs = random.choice(self.foots["legs"])
-    #     pass
     
     def draw(self, surface):
         if self.legsPath:

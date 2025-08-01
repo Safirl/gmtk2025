@@ -46,6 +46,7 @@ class StreetLevel(Level):
         self.player.follow_mouse(pos)
 
     def update(self, surface=None):
+        print("StreetLevel update called")
         event_bus.publish(
             "add_surface_to_render",
             self.background,
@@ -53,8 +54,11 @@ class StreetLevel(Level):
             0  
         )
         for foot in self.feet:
+            print(f"Moving foot at position: {foot.x}, {foot.y}")
             foot.move()
+            print(f"Getting scaled image for foot - original_image type: {type(foot.original_image)}")
             scaled_image = foot.get_scaled_image()
+            print("Successfully scaled image")
             event_bus.publish(
                 "add_surface_to_render",
                 scaled_image,  
