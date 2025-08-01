@@ -145,7 +145,7 @@ class Game():
             self.timer -= dt
         
         if self.timer <= 0:
-            self.loadLevel("gameOverScreen")
+            self.loadLevel("gameOverScreen", self.score)
             self.isGameRunning = False
             return
         

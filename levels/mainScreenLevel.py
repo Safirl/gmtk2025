@@ -25,6 +25,9 @@ class MainScreenLevel(Level):
 
     def loadLevel(self):
         super().loadLevel()
+        self.background = pygame.image.load("assets/backgroundStreet.png")
+        event_bus.publish("add_surface_to_render", self.background, [1024/2, 640/2], 0, True)
+        
         pygame.font.init()
         h1 = pygame.font.Font("assets/fonts/Bubble.ttf", 42)
         self.buttonFont = pygame.font.Font("assets/fonts/Gowun.ttf", 32)
