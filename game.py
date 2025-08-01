@@ -101,7 +101,7 @@ class Game():
         event_bus.subscribe("on_timer_changed", self.addTime)
         
         self.clock = pygame.time.Clock()
-        self.totalTime = 60.#in seconds
+        self.totalTime = 40.#in seconds
         self.timer = self.totalTime
         self.running = True
         self.isGameRunning = False

@@ -57,14 +57,11 @@ class ShoesLevel(Level):
             return
             
         if self.isMousePressed:
-            rect = Rect(self.mousePos[0], self.mousePos[1], 10, 10)
-            pygame.draw.line(self.drawnLacesSurface, (0, 0, 255), self.lastMousePos, self.mousePos, 15)
+            pygame.draw.line(self.drawnLacesSurface, (0, 0, 255), self.lastMousePos, self.mousePos, 20)
         
         super().update()
 
     def onMouseMoved(self, newPos):
-        if not self.isLevelRunning:
-            return
         if self.mousePos is not None:
             self.lastMousePos = self.mousePos
         self.mousePos = newPos

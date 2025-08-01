@@ -25,27 +25,28 @@ laces = [
 footDic = [
     {
         "legsPath": "assets/legs/legs1.png",
-        "footPath": "assets/foot/RedFoot.png",
+        "footPath": "assets/foot/redFoot.png",
         "unhappyPath": "assets/reactions/characterRedShoesAngry.png",
         "happyPath": "assets/reactions/characterRedShoesHappy.png",
-        "neutralPath": "",
+        "neutralPath": "assets/reactions/characterRedShoesSurprised.png",
         "hasLaces": True,
     },
     {
         "legsPath": "assets/legs/legs2.png",
-        "footPath": "assets/foot/RedFoot.png",
+        "footPath": "assets/foot/brownFoot.png",
         "unhappyPath": "assets/shoesLevel/unhappy.png",
         "happyPath": "assets/reactions/characterBrownShoesHappy.png",
-        "neutralPath": "",
+        "neutralPath": "assets/reactions/characterRedShoesSurprised.png",
         "hasLaces": True
     },
 ]
 
 class Foot():
-    def __init__(self, legsPath="", footPath="", unhappyPath="", happyPath="", hasLaces=True, index=0):
+    def __init__(self, legsPath="", footPath="", unhappyPath="", happyPath="", hasLaces=True, index=0, neutralPath=""):
             
         self.unhappyPath = unhappyPath
         self.happyPath = happyPath
+        self.neutralPath = neutralPath
         self.legsImage = pygame.image.load(legsPath)
         self.footImage = pygame.image.load(footPath)
         self.hasLaces = hasLaces
