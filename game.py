@@ -100,9 +100,12 @@ class Game():
         event_bus.subscribe("start_game", self.startGame)
         
         self.clock = pygame.time.Clock()
-        self.timer = 60. #in seconds
+        self.totalTime = 60.#in seconds
+        self.timer = self.totalTime
         self.running = True
         self.isGameRunning = False
+        self.timerImage = pygame.image.load("assets/timer.png")
+        self.clockImage = pygame.image.load("assets/clock.png")
     
     def queueCommand(self, newCommand):
         self.commands.append(newCommand)
@@ -127,7 +130,6 @@ class Game():
         event_bus.publish('mouse_moved', mousePos)
 
     def update(self):
-        
         event_bus.publish('game_update')
         for command in self.commands:
             command.run()
@@ -138,6 +140,22 @@ class Game():
         if self.clock.get_fps() != 0.:
             dt = self.clock.tick(60) / 1000.0
             self.timer -= dt
+        percent = max(0.0, min(1.0, self.timer / self.totalTime))
+        
+        bar_width = 403 * percent
+        bar_height = 41
+        topOffset = 32
+        stroke = 3.07
+
+        surface = pygame.Surface((self.timerImage.get_width(), bar_height), pygame.SRCALPHA)
+        surface.fill((0, 0, 0, 0))  # Transparent
+
+        rect = Rect(0, 0, bar_width, bar_height)
+        pygame.draw.rect(surface, (255, 255, 255, 255), rect, border_radius=bar_height // 2)
+
+        event_bus.publish("add_surface_to_render", self.timerImage, [1024/2, self.timerImage.get_height()/2 + topOffset], 11)
+        event_bus.publish("add_surface_to_render", surface, [1024/2, bar_height/2 + topOffset + stroke], 11)
+        event_bus.publish("add_surface_to_render", self.clockImage, [1024/2 - self.timerImage.get_width()/2, self.timerImage.get_height()/2 + topOffset], 11)
 
     def loadLevel(self, levelName, *args):
         event_bus.publish('load_level', levelName, *args)

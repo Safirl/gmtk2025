@@ -8,7 +8,7 @@ import os
 import numpy
 from random import randint
 
-seuil = 4.
+seuil = 5.
 
 class ShoesLevel(Level):
     def __init__(self):
