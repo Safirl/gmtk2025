@@ -106,7 +106,7 @@ class CompleteLacesCommand(Command):
             event_bus.publish("on_timer_changed", -3.)
             faceTexture = pygame.image.load(self.foot.unhappyPath)
         else:
-            event_bus.publish("on_timer_changed", 3.)
+            event_bus.publish("on_timer_changed", 5.)
             faceTexture = pygame.image.load(self.foot.happyPath)
             
         event_bus.publish("add_surface_to_render", faceTexture, [1024-faceTexture.get_width()/2,0+faceTexture.get_height()/2], 4, True)
@@ -139,4 +139,3 @@ class ShoesMouseMovedCommand(Command):
     def run(self):
         event_bus.publish("add_surface_to_render", self.armTexture, [self.pos[0], self.pos[1]], 4)
         pass
-    

@@ -1,7 +1,7 @@
 from level import Level
 import pygame
 from eventBus import event_bus
-from command import LoadLevelCommand, QuitGameCommand
+from command import QuitGameCommand
 
 class MainScreenLevel(Level):
     def __init__(self):
@@ -21,7 +21,7 @@ class MainScreenLevel(Level):
                 'action': lambda: self.quitGame()
             }
         ]
-        self.buttonRects = []  # Pour stocker les Rects des boutons
+        self.buttonRects = []
 
     def loadLevel(self):
         super().loadLevel()
