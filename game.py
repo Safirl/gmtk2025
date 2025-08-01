@@ -104,6 +104,7 @@ class Game():
         event_bus.subscribe("start_game", self.startGame)
         event_bus.subscribe("on_timer_changed", self.addTime)
         event_bus.subscribe("clean_queued_commands", self.cleanQueuedCommands)
+        event_bus.subscribe("reset_game", self.resetGame)
         
         self.clock = pygame.time.Clock()
         self.totalTime = 5.#in seconds
@@ -125,6 +126,12 @@ class Game():
         self.isGameRunning = True
         event_bus.publish("change_music", "assets/sounds/fun-big-band.mp3")
         self.loadLevel("street")
+        
+    def resetGame(self):
+        self.cleanQueuedCommands()
+        self.timer = self.totalTime
+        self.isGameRunning = False
+        self.score = 0
         
     def addTime(self, time:float):
         self.timer += time

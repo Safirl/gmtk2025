@@ -12,7 +12,7 @@ class GameOverLevel(Level):
         self.menuItems = [
             {
                 'title': 'Try again...',
-                'action': lambda: self.goToStreetLevel(),
+                'action': lambda: self.loadMainMenu(),
             },
             {
                 'title': 'Quit',
@@ -21,9 +21,8 @@ class GameOverLevel(Level):
         ]
         self.buttonRects = []
     
-    def goToStreetLevel(self):
-        event_bus.publish("on_timer_changed", 15.)
-        self.unloadLevel()
+    def loadMainMenu(self):
+        event_bus.publish("reset_game")
         loadLevel = LoadLevelCommand("mainScreen")
         event_bus.publish("queue_command", loadLevel)
 
