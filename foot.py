@@ -51,7 +51,7 @@ class Foot():
         self.footImage = pygame.image.load(footPath)
         self.hasLaces = hasLaces
 
-        self.x = random.randint(0, 700)
+        self.x = random.randint(0 +300, 1024 - 300)
         self.y = -500 - (index * 500)
         self.speed = 5
         self.index = index
@@ -59,7 +59,7 @@ class Foot():
 
         self.width = 300
         self.height = 500
-        self.rect = pygame.Rect(self.x, self.y, self.width, self.height*0.80)
+        self.rect = pygame.Rect(self.x, self.y, self.width, self.height*0.60)
 
     def move(self):
         self.y += self.speed  
