@@ -54,6 +54,17 @@ class MainScreenLevel(Level):
         for item in self.menuItems:
             button = self.buttonFont.render(item["title"], True, (255,255,255,255))
             buttonPos = (64, 128 + 64 * i)  # Position fixe sur X
+
+            for dx in [-2, 0, 2]:
+                for dy in [-2, 0, 2]:
+                    if dx != 0 or dy != 0:
+                        stroke = self.buttonFont.render(item["title"], True, (0,0,0,255))
+                        event_bus.publish(
+                            "add_surface_to_render",
+                            stroke,
+                            [buttonPos[0] + button.get_size()[0]/2 + dx, buttonPos[1] + button.get_size()[1]/2 + dy],
+                            10
+                        )
             event_bus.publish("add_surface_to_render", button, [buttonPos[0] + button.get_size()[0]/2, buttonPos[1] + button.get_size()[1]/2], 10)
 
             rect = button.get_rect(topleft=buttonPos)

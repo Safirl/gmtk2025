@@ -58,7 +58,7 @@ class Foot():
         self.scale = 1.0
 
         self.width = 300
-        self.height = 409
+        self.height = 500
         self.rect = pygame.Rect(self.x, self.y, self.width, self.height*0.80)
 
     def move(self):
