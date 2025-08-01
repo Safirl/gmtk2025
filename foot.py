@@ -53,27 +53,27 @@ foot = [
 ]
 
 class Foot():
-    def __init__(self, legsPath="", footPath="", alphaLacesPath="", lacesPath="",  unhappyPath="", happyPath="", hasLaces=True, index=0):
+    def __init__(self, legsPath="", footPath="", unhappyPath="", happyPath="", hasLaces=True, index=0):
             
         self.foots = [
             {
                 "legs": "assets/legs/legs1.png",
-                "foot": "assets/foot.jpg",
+                "foot": "assets/foot/RedFoot.png",
                 "hasLaces": True
             },
             {
                 "legs": "assets/legs/legs2.png",
-                "foot": "assets/foot.jpg",
+                "foot": "assets/foot/RedFoot.png",
                 "hasLaces": True
             },
             {
                 "legs": "assets/legs/legs3.png",
-                "foot": "assets/foot.jpg",
+                "foot": "assets/foot/RedFoot.png",
                 "hasLaces": True
             },
             {
                 "legs": "assets/legs/legs4.png",
-                "foot": "assets/foot.jpg",
+                "foot": "assets/foot/RedFoot.png",
                 "hasLaces": True
             },
             ]
@@ -86,8 +86,6 @@ class Foot():
         self.legsPath = pygame.image.load(selected_foot["legs"])
         self.footPath = selected_foot["foot"]
         self.hasLaces = selected_foot["hasLaces"]
-        self.alphaLacesPath = alphaLacesPath
-        self.lacesPath = lacesPath
 
         self.x = random.randint(0, 700)
         self.y = -500 - (index * 500)
