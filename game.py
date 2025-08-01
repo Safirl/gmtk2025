@@ -114,7 +114,7 @@ class Game():
         
     def startGame(self):
         self.isGameRunning = True
-        foot = Foot("", "assets/foot.jpg", "assets/shoesLevel/unhappy.png", "assets/shoesLevel/happy.png", True)
+        foot = Foot("", "assets/foot/RedFoot.png", "assets/shoesLevel/unhappy.png", "assets/shoesLevel/happy.png", True)
         
         self.loadLevel("shoes", foot)
         
