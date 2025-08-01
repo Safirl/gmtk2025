@@ -1,17 +1,10 @@
 import pygame
 import random
-from foot import Foot
+from foot import Foot, footDic
 from level import Level
 from eventBus import event_bus
 from player import Player
-
-# LOAD IMAGES ONCES
-legsPath = [
-            pygame.image.load("assets/legs/legs1.png"),
-            pygame.image.load("assets/legs/legs2.png"),
-            pygame.image.load("assets/legs/legs3.png"),
-            pygame.image.load("assets/legs/legs4.png")
-        ]
+from command import LoadLevelCommand
 
 class StreetLevel(Level):
     def __init__(self):
@@ -20,25 +13,21 @@ class StreetLevel(Level):
         self.player = Player()
         self.background = pygame.image.load("assets/backgroundStreet.png")
         self.isActive = False
-        print("StreetLevel initialized") 
 
     
     def loadLevel(self, *args, **kwargs ):
-        print("Street screen loaded.")
-        super().loadLevel()
-        self.feet.clear()
+        # self.feet.clear()
         for i in range(6):
-            foot = Foot(index=i)
+            args = footDic[random.randint(0, len(footDic) - 1)]
+            foot = Foot(args["legsPath"], args["footPath"], args["unhappyPath"], args["happyPath"], args["hasLaces"], i)
             print(f"Created foot {i}")  
             self.feet.append(foot)
         
         self.isActive = True
-        event_bus.subscribe('game_update', self.update)
+        super().loadLevel()
     
     def unloadLevel(self):
-        print("Unloading street level")
         self.isActive = False
-        event_bus.unsubscribe('game_update', self.update)
         self.feet.clear()
         super().unloadLevel()
 
@@ -46,7 +35,6 @@ class StreetLevel(Level):
         self.player.follow_mouse(pos)
 
     def update(self, surface=None):
-        print("StreetLevel update called")
         event_bus.publish(
             "add_surface_to_render",
             self.background,
@@ -54,11 +42,8 @@ class StreetLevel(Level):
             0  
         )
         for foot in self.feet:
-            print(f"Moving foot at position: {foot.x}, {foot.y}")
             foot.move()
-            print(f"Getting scaled image for foot - original_image type: {type(foot.original_image)}")
             scaled_image = foot.get_scaled_image()
-            print("Successfully scaled image")
             event_bus.publish(
                 "add_surface_to_render",
                 scaled_image,  
@@ -66,9 +51,9 @@ class StreetLevel(Level):
                 1
             )
             if foot.rect.colliderect(self.player.rect):
-                print(f"Leg detected! Sprite: {foot.legsPath}")
-                self.unloadLevel()  # Décharge le niveau actuel
-                event_bus.publish("load_level", "shoes", foot)
+                print("foot: ", foot)
+                loadLevel = LoadLevelCommand("shoes", foot)
+                event_bus.publish("queue_command", loadLevel)
                 return
             
         self.player.update()

@@ -8,7 +8,7 @@ import os
 import numpy
 from random import randint
 
-seuil = 5.
+seuil = 4.
 
 class ShoesLevel(Level):
     def __init__(self):
@@ -20,10 +20,6 @@ class ShoesLevel(Level):
             print("Foot is not valid for level: ", self.name)
             return
         self.foot = foot
-        if not os.path.isfile(self.foot.footPath):
-            print(f"Image not found: {self.foot.footPath}")
-            return
-        self.footTexture = pygame.image.load(self.foot.footPath)
         self.drawnLacesSurface = Surface((1024, 640), pygame.SRCALPHA)
         self.isMousePressed = False
         self.lastMousePos: tuple[int,int] = None
@@ -36,7 +32,7 @@ class ShoesLevel(Level):
         event_bus.subscribe('mouse_up', self.onMouseUp)
         
         #Draw static items
-        event_bus.publish("add_surface_to_render", self.footTexture, [1024/2, 640/2], 1, True)
+        event_bus.publish("add_surface_to_render", self.foot.footImage, [1024/2, 640/2], 1, True)
         event_bus.publish("add_surface_to_render", self.roadTexture, [1024/2, 640/2], 0, True)
         
         if self.foot.hasLaces:
