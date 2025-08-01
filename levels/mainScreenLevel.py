@@ -1,7 +1,7 @@
 from level import Level
 import pygame
 from eventBus import event_bus
-from command import QuitGameCommand
+from command import QuitGameCommand, Command
 
 class MainScreenLevel(Level):
     def __init__(self):
@@ -38,10 +38,13 @@ class MainScreenLevel(Level):
         
         self.music = pygame.mixer.music.load("assets/sounds/sneaky-feet.mp3")
         pygame.mixer.music.play(-1)
+        
+        self.isRunning = True
 
     def unloadLevel(self):
         super().unloadLevel()
         event_bus.unsubscribe("mouse_up", self.onMouseUp)
+        self.isRunning = False
 
     def update(self):
         titlePos = (self.title.get_width() / 2 + 64, self.title.get_height() / 2 + 64)
@@ -59,13 +62,25 @@ class MainScreenLevel(Level):
             i += 1
 
     def onMouseUp(self, pos):
+        if not self.isRunning:
+            return
         for rect, action in self.buttonRects:
             if rect.collidepoint(pos):
                 action()
                 
     def startGame(self):
-        event_bus.publish("start_game")
+        self.isRunning = False
+        command = StartGameCommand()
+        pygame.mixer.music.fadeout(1500)
+        event_bus.publish("queue_delayed_command", 1.5, command)
         
     def quitGame(self):
         command = QuitGameCommand()
         event_bus.publish("queue_command", command)
+
+class StartGameCommand(Command):
+    def __init__(self):
+        super().__init__()
+        
+    def run(self):
+        event_bus.publish("start_game")

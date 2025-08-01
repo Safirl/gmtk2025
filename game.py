@@ -121,7 +121,6 @@ class Game():
         
     def startGame(self):
         self.isGameRunning = True
-        
         self.loadLevel("street")
         
     def addTime(self, time:float):
@@ -208,3 +207,6 @@ class DelayedCommandManager():
     
     def cleanCommands(self):
         self.commands = []
+        
+class MusicPlayer():
+    pass
