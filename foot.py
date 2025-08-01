@@ -1,11 +1,38 @@
 import random
 import pygame
+
+#laces drawing
+laces = [
+    {
+        "alphaLacesPath": "assets/alpha/laces.png",
+        "lacesPath": "assets/laces/laces.png"
+    },
+    {
+        "alphaLacesPath": "assets/alpha/laces.png",
+        "lacesPath": "assets/laces/laces.png"
+    },
+    {
+        "alphaLacesPath": "assets/alpha/laces.png",
+        "lacesPath": "assets/laces/laces.png"
+    },
+    {
+        "alphaLacesPath": "assets/alpha/laces.png",
+        "lacesPath": "assets/laces/laces.png"
+    },
+    {
+        "alphaLacesPath": "assets/alpha/laces.png",
+        "lacesPath": "assets/laces/laces.png"
+    },
+    {
+        "alphaLacesPath": "assets/alpha/laces.png",
+        "lacesPath": "assets/laces/laces.png"
+    },
+]
+
 class Foot():
-    def __init__(self, legsPath="", footPath="", alphaLacesPath="", lacesPath="", unhappyPath="", happyPath="", hasLaces=True, index=0):
+    def __init__(self, legsPath="", footPath="", unhappyPath="", happyPath="", hasLaces=True, index=0):
         self.legsPath = legsPath
         self.footPath = footPath
-        self.alphaLacesPath = alphaLacesPath
-        self.lacesPath = lacesPath
         self.unhappyPath = unhappyPath
         self.happyPath = happyPath
         self.x = random.randint(0, 700)
