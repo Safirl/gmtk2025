@@ -23,6 +23,7 @@ class GameOverLevel(Level):
         self.score = score
         event_bus.publish("clean_queued_commands")
         event_bus.publish("add_surface_to_render", self.background, [1024/2, 640/2], 0, True)
+        event_bus.publish("change_music", "assets/sounds/sneaky-end.mp3")
         
         super().loadLevel()
 

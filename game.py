@@ -93,6 +93,7 @@ class Game():
     def __init__(self):
         pygame.init()
         pygame.mixer.init()
+        pygame.mixer.music.set_volume(.6)
         
         self.ui = UserInterface()
         self.delayedManager = DelayedCommandManager()
@@ -105,7 +106,7 @@ class Game():
         event_bus.subscribe("clean_queued_commands", self.cleanQueuedCommands)
         
         self.clock = pygame.time.Clock()
-        self.totalTime = 15.#in seconds
+        self.totalTime = 5.#in seconds
         self.timer = self.totalTime
         self.running = True
         self.isGameRunning = False
@@ -154,7 +155,6 @@ class Game():
         
         if self.timer <= 0:
             self.isGameRunning = False
-            event_bus.publish("change_music", "assets/sounds/sneaky-end.mp3")
             self.loadLevel("gameOverScreen", self.score)
             return
         
@@ -216,6 +216,14 @@ class MusicPlayer():
         event_bus.subscribe("change_music", self.changeMusic)
     
     def changeMusic(self, musicPath):
-        pygame.mixer.music.fadeout(1500)
-        pygame.mixer.music.load(musicPath)
+        command = ChangeMusicCommand(musicPath)
+        event_bus.publish("queue_delayed_command", .5, command)
+        pygame.mixer.music.fadeout(500)
+        
+        
+class ChangeMusicCommand(Command):
+    def __init__(self, musicPath):
+        self.musicPath = musicPath
+    def run(self):
+        pygame.mixer.music.load(self.musicPath)
         pygame.mixer.music.play(-1, fade_ms=1000)
