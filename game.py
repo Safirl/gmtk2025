@@ -96,6 +96,7 @@ class Game():
         
         self.ui = UserInterface()
         self.delayedManager = DelayedCommandManager()
+        self.musicManager = MusicPlayer()
         
         self.commands = []
         event_bus.subscribe("queue_command", self.queueCommand)
@@ -121,6 +122,7 @@ class Game():
         
     def startGame(self):
         self.isGameRunning = True
+        event_bus.publish("change_music", "assets/sounds/fun-big-band.mp3")
         self.loadLevel("street")
         
     def addTime(self, time:float):
@@ -151,8 +153,9 @@ class Game():
             self.timer -= dt
         
         if self.timer <= 0:
-            self.loadLevel("gameOverScreen", self.score)
             self.isGameRunning = False
+            event_bus.publish("change_music", "assets/sounds/sneaky-end.mp3")
+            self.loadLevel("gameOverScreen", self.score)
             return
         
         percent = max(0.0, min(1.0, self.timer / self.totalTime))
@@ -209,4 +212,10 @@ class DelayedCommandManager():
         self.commands = []
         
 class MusicPlayer():
-    pass
+    def __init__(self):
+        event_bus.subscribe("change_music", self.changeMusic)
+    
+    def changeMusic(self, musicPath):
+        pygame.mixer.music.fadeout(1500)
+        pygame.mixer.music.load(musicPath)
+        pygame.mixer.music.play(-1, fade_ms=1000)

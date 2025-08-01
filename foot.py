@@ -34,7 +34,7 @@ footDic = [
     {
         "legsPath": "assets/legs/characterBrownShoes.png",
         "footPath": "assets/foot/brownFoot.png",
-        "unhappyPath": "assets/shoesLevel/characterBrownShoesAngry.png",
+        "unhappyPath": "assets/reactions/characterBrownShoesAngry.png",
         "happyPath": "assets/reactions/characterBrownShoesHappy.png",
         "neutralPath": "assets/reactions/characterBrownShoesSurprised.png",
         "hasLaces": True

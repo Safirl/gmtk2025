@@ -36,8 +36,7 @@ class MainScreenLevel(Level):
 
         event_bus.subscribe("mouse_up", self.onMouseUp)
         
-        self.music = pygame.mixer.music.load("assets/sounds/sneaky-feet.mp3")
-        pygame.mixer.music.play(-1)
+        event_bus.publish("change_music", "assets/sounds/sneaky-feet.mp3")
         
         self.isRunning = True
 
@@ -70,17 +69,8 @@ class MainScreenLevel(Level):
                 
     def startGame(self):
         self.isRunning = False
-        command = StartGameCommand()
-        pygame.mixer.music.fadeout(1500)
-        event_bus.publish("queue_delayed_command", 1.5, command)
+        event_bus.publish("start_game")
         
     def quitGame(self):
         command = QuitGameCommand()
         event_bus.publish("queue_command", command)
-
-class StartGameCommand(Command):
-    def __init__(self):
-        super().__init__()
-        
-    def run(self):
-        event_bus.publish("start_game")
