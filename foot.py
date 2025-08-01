@@ -2,13 +2,38 @@ import random
 import pygame
 class Foot():
     def __init__(self, legsPath="", footPath="", alphaLacesPath="", lacesPath="", hasLaces=True, index=0):
-        self.legsPath = legsPath
-        self.footPath = footPath
+            
+        self.foots = [
+            {
+                "legs": "assets/legs/legs1.png",
+                "foot": "assets/foot.jpg",
+                "hasLaces": True
+            },
+            {
+                "legs": "assets/legs/legs2.png",
+                "foot": "assets/foot.jpg",
+                "hasLaces": True
+            },
+            {
+                "legs": "assets/legs/legs3.png",
+                "foot": "assets/foot.jpg",
+                "hasLaces": True
+            },
+            {
+                "legs": "assets/legs/legs4.png",
+                "foot": "assets/foot.jpg",
+                "hasLaces": True
+            },
+            ]
+        selected_foot = random.choice(self.foots)
+        self.legsPath = pygame.image.load(selected_foot["legs"])
+        self.footPath = selected_foot["foot"]
+        self.lacesPath = selected_foot["laces"]
+        self.hasLaces = selected_foot["hasLaces"]
         self.alphaLacesPath = alphaLacesPath
-        self.lacesPath = lacesPath
+
         self.x = random.randint(0, 700)
         self.y = -500 - (index * 500)
-        # self.speed = random.uniform(5, 10)
         self.speed = 5
         self.hasLaces = hasLaces
         self.index = index
@@ -19,28 +44,7 @@ class Foot():
         self.height = 400
         self.rect = pygame.Rect(self.x, self.y, self.width, self.height)
 
-        self.foots = [
-    {
-        "legs": "assets/legs1.png",
-        "foot": "",
-        "hasLaces": True
-    },
-    {
-        "legs": "assets/legs2.png",
-        "foot": "",
-        "hasLaces": True
-    },
-    {
-        "legs": "assets/legs3.png",
-        "foot": "",
-        "hasLaces": True
-    },
-    {
-        "legs": "assets/legs4.png",
-        "foot": "",
-        "hasLaces": True
-    },
-]
+
 
 
         
@@ -71,9 +75,9 @@ class Foot():
         self.rect.y = self.y
         print('is reset', self.index)
 
-    def getRandomLegs(self):
-        # self.legs = random.choice(self.foots["legs"])
-        pass
+    # def getRandomLegs(self):
+    #     # self.legs = random.choice(self.foots["legs"])
+    #     pass
     
     def draw(self, surface):
         if self.legsPath:

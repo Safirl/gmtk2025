@@ -3,6 +3,7 @@ import random
 from foot import Foot
 from level import Level
 from eventBus import event_bus
+from player import Player
 
 # LOAD IMAGES ONCES
 legsPath = [
@@ -16,23 +17,33 @@ class StreetLevel(Level):
     def __init__(self):
         super().__init__("street")
         self.feet = []
-
+        self.player = Player()
         self.background = pygame.image.load("assets/backgroundStreet.png")
+        self.isActive = False
         print("StreetLevel initialized") 
-        print("StreetLevel initialized") 
+
     
     def loadLevel(self, *args, **kwargs ):
         print("Street screen loaded.")
         super().loadLevel()
         self.feet.clear()
         for i in range(6):
-            leg_img = random.choice(legsPath)  
-            foot = Foot(legsPath=leg_img, index=i) 
-            print(f"Created foot with image: {leg_img}")  
+            foot = Foot(index=i)
+            print(f"Created foot {i}")  
             self.feet.append(foot)
         
-
+        self.isActive = True
         event_bus.subscribe('game_update', self.update)
+    
+    def unloadLevel(self):
+        print("Unloading street level")
+        self.isActive = False
+        event_bus.unsubscribe('game_update', self.update)
+        self.feet.clear()
+        super().unloadLevel()
+
+    def onMouseMoved(self, pos):
+        self.player.follow_mouse(pos)
 
     def update(self, surface=None):
         event_bus.publish(
@@ -50,4 +61,11 @@ class StreetLevel(Level):
                 [foot.x, foot.y],
                 1
             )
+            if foot.rect.colliderect(self.player.rect):
+                print(f"Leg detected! Sprite: {foot.legsPath}")
+                self.unloadLevel()  # Décharge le niveau actuel
+                event_bus.publish("load_level", "shoes", foot)
+                return
+            
+        self.player.update()
     
