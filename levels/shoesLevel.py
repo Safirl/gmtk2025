@@ -29,6 +29,7 @@ class ShoesLevel(Level):
         self.lastMousePos: tuple[int,int] = None
         self.mousePos: tuple[int,int] = None
         self.lacesTexture, self.alphaLacesTexture = self.LoadRandomLaces()
+        self.roadTexture = pygame.image.load("assets/shoesLevel/road.jpg")
         
         event_bus.subscribe('mouse_moved', self.onMouseMoved)
         event_bus.subscribe('mouse_down', self.onMouseDown)
@@ -36,6 +37,7 @@ class ShoesLevel(Level):
         
         #Draw static items
         event_bus.publish("add_surface_to_render", self.footTexture, [1024/2, 640/2], 1, True)
+        event_bus.publish("add_surface_to_render", self.roadTexture, [1024/2, 640/2], 0, True)
         
         if self.foot.hasLaces:
             event_bus.publish("add_surface_to_render", self.lacesTexture, [1024/2, 640/2], 2, True)
