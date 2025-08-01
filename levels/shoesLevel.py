@@ -1,13 +1,14 @@
 from level import Level
 from eventBus import event_bus
-from command import Command
-from foot import Foot
+from command import Command, LoadLevelCommand
+from foot import Foot, laces
 import pygame
 from pygame import Vector2, Surface, Rect
 import os
 import numpy
+from random import randint
 
-seuil = 4
+seuil = 4.
 
 class ShoesLevel(Level):
     def __init__(self):
@@ -23,28 +24,42 @@ class ShoesLevel(Level):
             print(f"Image not found: {self.foot.footPath}")
             return
         self.footTexture = pygame.image.load(self.foot.footPath)
-        self.lacesTexture = pygame.image.load(self.foot.lacesPath)
         self.drawnLacesSurface = Surface((1024, 640), pygame.SRCALPHA)
         self.isMousePressed = False
         self.lastMousePos: tuple[int,int] = None
         self.mousePos: tuple[int,int] = None
+        self.lacesTexture, self.alphaLacesTexture = self.LoadRandomLaces()
+        self.roadTexture = pygame.image.load("assets/shoesLevel/road.jpg")
         
         event_bus.subscribe('mouse_moved', self.onMouseMoved)
         event_bus.subscribe('mouse_down', self.onMouseDown)
         event_bus.subscribe('mouse_up', self.onMouseUp)
         
+        #Draw static items
+        event_bus.publish("add_surface_to_render", self.footTexture, [1024/2, 640/2], 1, True)
+        event_bus.publish("add_surface_to_render", self.roadTexture, [1024/2, 640/2], 0, True)
+        
+        if self.foot.hasLaces:
+            event_bus.publish("add_surface_to_render", self.lacesTexture, [1024/2, 640/2], 2, True)
+        
+        self.isLevelRunning = True
         return super().loadLevel()
 
     def unloadLevel(self):
         event_bus.unsubscribe('mouse_moved', self.onMouseMoved)
-        event_bus.unsubscribe('game_update', self.onUpdate)
+        event_bus.unsubscribe('mouse_down', self.onMouseDown)
+        event_bus.unsubscribe('mouse_up', self.onMouseUp)
+        self.isLevelRunning = False
         return super().unloadLevel()
 
     def update(self):
-        event_bus.publish("add_surface_to_render", self.footTexture, [1024/2, 640/2], 1)
-        event_bus.publish("add_surface_to_render", self.lacesTexture, [1024/2, 640/2], 2)
-        if not self.foot.hasLaces:
+        if not self.isLevelRunning:
             return
+        if not self.foot.hasLaces:
+            command = CompleteLacesCommand(self.foot, self.drawnLacesSurface, self.alphaLacesTexture, self)
+            event_bus.publish("queue_command", command)
+            return
+            
         if self.isMousePressed:
             rect = Rect(self.mousePos[0], self.mousePos[1], 10, 10)
             pygame.draw.line(self.drawnLacesSurface, (0, 0, 255), self.lastMousePos, self.mousePos, 15)
@@ -62,24 +77,42 @@ class ShoesLevel(Level):
     def onMouseDown(self, newPos):
         self.isMousePressed = True
         
-    def onMouseUp(self):
+    def onMouseUp(self, pos):
+        if not self.isLevelRunning:
+            return
         self.isMousePressed = False
-        alphaTexture = pygame.image.load(self.foot.alphaLacesPath)
-        command = CompleteLacesCommand(self.drawnLacesSurface, alphaTexture)
+        command = CompleteLacesCommand(self.foot, self.drawnLacesSurface, self.alphaLacesTexture, self)
         event_bus.publish("queue_command", command)
+        
+    def LoadRandomLaces(self):
+        random = laces[randint(0, len(laces) - 1)]
+        alphaTexture = pygame.image.load(random["alphaLacesPath"])
+        lacesTexture = pygame.image.load(random["lacesPath"])
+        return lacesTexture, alphaTexture
     
 
 class CompleteLacesCommand(Command):
-    def __init__(self, lacesTexture: Surface, completeLacesAlphatexture: Surface):
-        self.lacesTexture = lacesTexture
-        self.completeLacesTexture = completeLacesAlphatexture
+    def __init__(self, foot: Foot, drawnTexture: Surface, alphaTexture: Surface, level: ShoesLevel):
+        self.foot = foot
+        self.drawnTexture = drawnTexture
+        self.alphaTexture = alphaTexture
+        self.level = level
     
     def run(self):
-        diff = self.getAlphaDifferencePercentage(self.lacesTexture, self.completeLacesTexture)
+        self.level.isLevelRunning = False
+        diff = self.getAlphaDifferencePercentage(self.alphaTexture, self.drawnTexture)
+        faceTexture = None
         if diff >= seuil:
-            print("you lost! :", diff)
+            event_bus.publish("on_timer_changed", -3.)
+            faceTexture = pygame.image.load(self.foot.unhappyPath)
         else:
-            print("you won! :", diff)
+            event_bus.publish("on_timer_changed", 3.)
+            faceTexture = pygame.image.load(self.foot.happyPath)
+            
+        event_bus.publish("add_surface_to_render", faceTexture, [1024-faceTexture.get_width()/2,0+faceTexture.get_height()/2], 4, True)
+        
+        loadLevel = LoadLevelCommand("street")
+        event_bus.publish("queue_delayed_command", 1.5, loadLevel)
     
     def getAlphaDifferencePercentage(self, texture1: Surface, texture2: Surface):
         if texture1.get_size() != texture2.get_size():

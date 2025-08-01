@@ -31,11 +31,11 @@ class MainScreenLevel(Level):
         self.title = h1.render("C'est bouclé !", True, (255,255,255,255))
         self.buttonRects.clear()
 
-        event_bus.subscribe("mouse_down", self.onMouseDown)
+        event_bus.subscribe("mouse_up", self.onMouseUp)
 
     def unloadLevel(self):
         super().unloadLevel()
-        event_bus.unsubscribe("mouse_down", self.onMouseDown)
+        event_bus.unsubscribe("mouse_up", self.onMouseUp)
 
     def update(self):
         titlePos = (self.title.get_width() / 2 + 64, self.title.get_height() / 2 + 64)
@@ -52,7 +52,7 @@ class MainScreenLevel(Level):
             self.buttonRects.append((rect, item["action"]))
             i += 1
 
-    def onMouseDown(self, pos):
+    def onMouseUp(self, pos):
         for rect, action in self.buttonRects:
             if rect.collidepoint(pos):
                 action()
