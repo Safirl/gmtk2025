@@ -99,9 +99,10 @@ class Game():
         event_bus.subscribe("queue_command", self.queueCommand)
         event_bus.subscribe("start_game", self.startGame)
         event_bus.subscribe("on_timer_changed", self.addTime)
+        event_bus.subscribe("clean_queued_commands", self.cleanQueuedCommands)
         
         self.clock = pygame.time.Clock()
-        self.totalTime = 40.#in seconds
+        self.totalTime = 15.#in seconds
         self.timer = self.totalTime
         self.running = True
         self.isGameRunning = False
@@ -111,6 +112,10 @@ class Game():
     
     def queueCommand(self, newCommand):
         self.commands.append(newCommand)
+        
+    def cleanQueuedCommands(self):
+        self.commands = []
+        self.delayedManager.cleanCommands()
         
     def startGame(self):
         self.isGameRunning = True
@@ -198,3 +203,6 @@ class DelayedCommandManager():
         self.commands = [(due, cmd) for due, cmd in self.commands if due > now]
         for cmd in ready:
             cmd.run()
+    
+    def cleanCommands(self):
+        self.commands = []
