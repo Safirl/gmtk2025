@@ -8,9 +8,6 @@ from command import Command
 os.environ['SDL_VIDEO_CENTERED'] = '1'
 
 class RenderItem:
-    """
-    Classe pour stocker les informations de rendu
-    """
     def __init__(self, surface: Surface, position, layer=0, isPersistent=False):
         self.surface = surface
         self.position = position 
@@ -107,7 +104,7 @@ class Game():
         event_bus.subscribe("reset_game", self.resetGame)
         
         self.clock = pygame.time.Clock()
-        self.totalTime = 5.#in seconds
+        self.totalTime = 30.#in seconds
         self.timer = self.totalTime
         self.running = True
         self.isGameRunning = False
@@ -221,12 +218,16 @@ class DelayedCommandManager():
 class MusicPlayer():
     def __init__(self):
         event_bus.subscribe("change_music", self.changeMusic)
+        event_bus.subscribe("play_sound", self.playSound)
     
     def changeMusic(self, musicPath):
         command = ChangeMusicCommand(musicPath)
         event_bus.publish("queue_delayed_command", .5, command)
         pygame.mixer.music.fadeout(500)
-        
+    
+    def playSound(self, soundPath):
+        command = PlaySoundCommand(soundPath)
+        event_bus.publish("queue_command", command)
         
 class ChangeMusicCommand(Command):
     def __init__(self, musicPath):
@@ -234,3 +235,9 @@ class ChangeMusicCommand(Command):
     def run(self):
         pygame.mixer.music.load(self.musicPath)
         pygame.mixer.music.play(-1, fade_ms=1000)
+
+class PlaySoundCommand(Command):
+    def __init__(self, soundPath):
+        self.sound = pygame.mixer.Sound(soundPath)
+    def run(self):
+        pygame.mixer.Sound.play(self.sound)

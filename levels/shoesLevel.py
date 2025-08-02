@@ -14,6 +14,8 @@ class ShoesLevel(Level):
     def __init__(self):
         super().__init__("shoes")
         self.armTexture = pygame.image.load("assets/armPicking.png")
+        self.goodSound = "assets/sounds/bruitages/professional.mp3"
+        self.badSound = "assets/sounds/bruitages/timeToMove.mp3"
 
     def loadLevel(self, foot: Foot):
         if not foot:
@@ -97,14 +99,29 @@ class CompleteLacesCommand(Command):
         self.level.isLevelRunning = False
         diff = self.getAlphaDifferencePercentage(self.alphaTexture, self.drawnTexture)
         faceTexture = None
-        if diff >= seuil:
+        rand = randint(0, 1)
+        if not self.foot.hasLaces:
+            event_bus.publish("play_sound", "assets/sounds/bruitages/grrrr.mp3")
             event_bus.publish("on_timer_changed", -3.)
-            faceTexture = pygame.image.load(self.foot.unhappyPath)
         else:
-            event_bus.publish("on_timer_changed", 5.)
-            faceTexture = pygame.image.load(self.foot.happyPath)
+            if diff >= seuil:
+                if self.foot.unhappyPath is not "":
+                    faceTexture = pygame.image.load(self.foot.unhappyPath)
+                if rand == 0:
+                    event_bus.publish("play_sound", self.level.badSound)
+                else:
+                    event_bus.publish("play_sound", self.foot.failSound)
+            else:
+                event_bus.publish("on_timer_changed", 5.)
+                if self.foot.happyPath is not "":
+                    faceTexture = pygame.image.load(self.foot.happyPath)
+                if rand == 0:
+                    event_bus.publish("play_sound", self.level.goodSound)
+                else:
+                    event_bus.publish("play_sound", self.foot.successSound)
             
-        event_bus.publish("add_surface_to_render", faceTexture, [1024-faceTexture.get_width()/2,0+faceTexture.get_height()/2], 4, True)
+            if faceTexture:
+                event_bus.publish("add_surface_to_render", faceTexture, [1024-faceTexture.get_width()/2,0+faceTexture.get_height()/2], 4, True)
         
         loadLevel = LoadLevelCommand("street")
         event_bus.publish("queue_delayed_command", 1.5, loadLevel)

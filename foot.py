@@ -24,12 +24,15 @@ laces = [
 
 footDic = [
     {
-        "legsPath": "assets/legs/characterRedShoes1.PNG",
+        "legsPath": "assets/legs/characterRedShoes.PNG",
         "footPath": "assets/foot/redFoot.png",
         "unhappyPath": "assets/reactions/characterRedShoesAngry.png",
         "happyPath": "assets/reactions/characterRedShoesHappy.png",
         "neutralPath": "assets/reactions/characterRedShoesSurprised.png",
         "hasLaces": True,
+        "streetSound": "assets/sounds/bruitages/redC/ohNo.mp3",
+        "successSound": "assets/sounds/bruitages/redC/amazing.mp3",
+        "failSound": "assets/sounds/bruitages/redC/ruinedDay.mp3"
     },
     {
         "legsPath": "assets/legs/characterBrownShoes.png",
@@ -37,12 +40,26 @@ footDic = [
         "unhappyPath": "assets/reactions/characterBrownShoesAngry.png",
         "happyPath": "assets/reactions/characterBrownShoesHappy.png",
         "neutralPath": "assets/reactions/characterBrownShoesSurprised.png",
-        "hasLaces": True
+        "hasLaces": True,
+        "streetSound": "assets/sounds/bruitages/brownC/whatDoing.mp3",
+        "successSound": "assets/sounds/bruitages/brownC/oweYou.mp3",
+        "failSound": "assets/sounds/bruitages/brownC/run.mp3"
+    },
+    {
+        "legsPath": "assets/legs/characterBlueShoes.webp",
+        "footPath": "assets/foot/blueFoot.png",
+        "unhappyPath": "",
+        "happyPath": "",
+        "neutralPath": "assets/reactions/characterBlueShoesSurprised.webp",
+        "hasLaces": False,
+        "streetSound": "assets/sounds/bruitages/brownC/whatDoing.mp3",
+        "successSound": "assets/sounds/bruitages/brownC/oweYou.mp3",
+        "failSound": "assets/sounds/bruitages/brownC/run.mp3"
     },
 ]
 
 class Foot():
-    def __init__(self, legsPath="", footPath="", unhappyPath="", happyPath="", hasLaces=True, index=0, neutralPath=""):
+    def __init__(self, legsPath="", footPath="", unhappyPath="", happyPath="", hasLaces=True, neutralPath="", streetSound="", successSound="", failSound=""):
             
         self.unhappyPath = unhappyPath
         self.happyPath = happyPath
@@ -51,15 +68,24 @@ class Foot():
         self.footImage = pygame.image.load(footPath)
         self.hasLaces = hasLaces
 
-        self.x = random.randint(0 +300, 1024 - 300)
-        self.y = -500 - (index * 500)
+        self.x = random.randint(120, 800)
+        self.y = -random.randint(250, 1500)
         self.speed = 5
-        self.index = index
         self.scale = 1.0
 
         self.width = 300
         self.height = 500
         self.rect = pygame.Rect(self.x, self.y, self.width, self.height*0.60)
+
+        self.sounds = [
+            "assets/sounds/bruitages/mmmhhh.mp3",
+            "assets/sounds/bruitages/hehe.mp3",
+            "assets/sounds/bruitages/mwhaha.mp3",
+            "assets/sounds/bruitages/comeHereShoes.mp3",
+        ]
+        self.successSound = successSound
+        self.failSound = failSound
+        self.streetSound = streetSound
 
     def move(self):
         self.y += self.speed  
@@ -76,8 +102,9 @@ class Foot():
         return pygame.transform.scale(self.legsImage, (new_width, new_height))
     
     def reset_position(self):
-        self.y = -2500
-        self.x = random.randint(0, 700)
+        self.y = -random.randint(250, 2000)
+        self.x = random.randint(120, 800)
         self.rect.x = self.x
         self.rect.y = self.y
-        print('is reset', self.index)
+        event_bus.publish("play_sound", self.sounds[random.randint(0, len(self.sounds)- 1)])
+

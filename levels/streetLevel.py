@@ -17,9 +17,8 @@ class StreetLevel(Level):
     
     def loadLevel(self, *args, **kwargs):
         # self.feet.clear()
-        for i in range(6):
-            footArgs = footDic[random.randint(0, len(footDic) - 1)]
-            foot = Foot(footArgs["legsPath"], footArgs["footPath"], footArgs["unhappyPath"], footArgs["happyPath"], footArgs["hasLaces"], i, footArgs["neutralPath"])
+        for footArgs in footDic:
+            foot = Foot(footArgs["legsPath"], footArgs["footPath"], footArgs["unhappyPath"], footArgs["happyPath"], footArgs["hasLaces"], footArgs["neutralPath"], footArgs["streetSound"], footArgs["successSound"], footArgs["failSound"])
             self.feet.append(foot)
         
         self.isActive = True
@@ -43,6 +42,7 @@ class StreetLevel(Level):
     def update(self, surface=None):
         if not self.isActive:
             return
+        i = 3
         for foot in self.feet:
             foot.move()
             scaled_image = foot.get_scaled_image()
@@ -50,13 +50,18 @@ class StreetLevel(Level):
                 "add_surface_to_render",
                 scaled_image,  
                 [foot.x, foot.y],
-                1
+                i
             )
+            i -= 1
             if foot.rect.colliderect(self.player.rect):
                 texture = pygame.image.load(foot.neutralPath)
                 event_bus.publish("add_surface_to_render", texture, [1024-texture.get_width()/2,0+texture.get_height()/2], 4, True)
                 loadLevel = LoadLevelCommand("shoes", foot)
                 event_bus.publish("queue_delayed_command", 1.5, loadLevel)
+                if not foot.hasLaces:
+                    event_bus.publish("play_sound", "assets/sounds/bruitages/ohNo.mp3")
+                else: 
+                    event_bus.publish("play_sound", foot.streetSound)
                 self.isActive = False
                 return
             

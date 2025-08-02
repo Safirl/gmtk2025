@@ -20,6 +20,7 @@ class GameOverLevel(Level):
             }
         ]
         self.buttonRects = []
+        self.sound1 = "assets/sounds/bruitages/neverTieAgain.mp3"
     
     def loadMainMenu(self):
         event_bus.publish("reset_game")
@@ -35,6 +36,7 @@ class GameOverLevel(Level):
         self.buttonRects.clear()
         event_bus.subscribe("mouse_up", self.onMouseUp)
         event_bus.publish("change_music", "assets/sounds/sneaky-end.mp3")
+        event_bus.publish("play_sound", self.sound1)
         
         super().loadLevel()
     

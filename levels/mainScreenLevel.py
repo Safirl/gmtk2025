@@ -9,7 +9,7 @@ class MainScreenLevel(Level):
         
         self.menuItems = [
             {
-                'title': 'Play! Let\'s tie some shoes...',
+                'title': 'Play! Let\'s tie some shoeslaces...',
                 'action': lambda: self.startGame(),
             },
             {
@@ -22,6 +22,7 @@ class MainScreenLevel(Level):
             }
         ]
         self.buttonRects = []
+        self.startGameSound = "assets/sounds/bruitages/startGame.mp3"
 
     def loadLevel(self):
         super().loadLevel()
@@ -29,9 +30,9 @@ class MainScreenLevel(Level):
         event_bus.publish("add_surface_to_render", self.background, [1024/2, 640/2], 0, True)
         
         pygame.font.init()
-        h1 = pygame.font.Font("assets/fonts/Bubble.ttf", 42)
+        self.h1 = pygame.font.Font("assets/fonts/Bubble.ttf", 64)
         self.buttonFont = pygame.font.Font("assets/fonts/Gowun.ttf", 32)
-        self.title = h1.render("C'est bouclé !", True, (255,255,255,255))
+        self.title = self.h1.render("C'est bouclé !", True, (255,255,255,255))
         self.buttonRects.clear()
 
         event_bus.subscribe("mouse_up", self.onMouseUp)
@@ -81,6 +82,7 @@ class MainScreenLevel(Level):
     def startGame(self):
         self.isRunning = False
         event_bus.publish("start_game")
+        event_bus.publish("play_sound", self.startGameSound)
         
     def quitGame(self):
         command = QuitGameCommand()
